@@ -29,6 +29,7 @@
 
 <?php
 // On récupere la cléf depuis le site de flo :3 Merci a lui
+// Go check is account here : https://github.com/chocobozzz
 $adresse = "http://chocobozzz.craym.eu/cgi-bin/script.cgi";
 $contenu = file_get_contents ($adresse);
 if(!preg_match('#<p>(.+)<\/p>#', $contenu, $titre))
