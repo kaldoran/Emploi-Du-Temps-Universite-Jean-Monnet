@@ -1,37 +1,41 @@
 <?php
-define("WEEK_START_NB", 33);
-define("NUMBER_WEEK_IN_YEAR", 52); 
+    define("WEEK_START_NB", 33);
+    define("NUMBER_WEEK_IN_YEAR", 52); 
 ?>
+
 <!DOCTYPE>
 <html>
 <head>
-<meta charset="utf-8" />
-<style>
-body{
-font-family: Arial, Tahoma, Verdana, sans-serif;
-font-size: 12px;
-font-weight: bold;
-margin: 0;
-}
-#info {
-text-align: center;
-background-color: #D3D3D3;
-border: 1px solid black;
-margin-top: -1px;
-width: 100%;
-}
-</style>
-<title>Emploi du temps</title>
+    <meta charset="utf-8" />
+    
+    <style>
+        body{
+            font-family: Arial, Tahoma, Verdana, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        #info {
+            text-align: center;
+            background-color: #D3D3D3;
+            border: 1px solid black;
+            margin-top: -1px;
+            width: 100%;
+        }
+    </style>
+    
+    <title>Emploi du temps Université Jean-Monnet (Saint-Etienne)</title>
 </head>
 <body>
 
 <?php
-$adresse = "code_edt.pl";
+
 exec("./code_edt.pl", $output);
 $contenu = $output[0];
 
 if(!$contenu)
-    echo "<p style='margin-top: 10px; text-align: center; color: red; font-weight: bold'>Problème avec la récupétation de la clé'</p>";
+    echo "<p style='margin-top: 10px; text-align: center; color: red; font-weight: bold'>Problème avec la récupétation de la clé</p>";
 
 $code = $contenu;
 ?>
