@@ -222,7 +222,7 @@
                     tab_jours.push(jours_options[i].value);
             }
             
-            var lien = "http://planning.univ-st-etienne.fr/ade/imageEt?identifier="+code+"&projectId=7&idPianoWeek="+semaine+"&idPianoDay="+tab_jours+"&idTree="+code_promo+"&width=1300&height=500&lunchName=REPAS&displayMode=1057855&showLoad=false&ttl=1378793160704&displayConfId=56";
+            var lien = "http://planning.univ-st-etienne.fr/ade/imageEt?identifier="+code+"&projectId=7&idPianoWeek="+semaine+"&idPianoDay="+tab_jours+"&idTree="+code_promo+"&width=1100&height=500&lunchName=REPAS&displayMode=1057855&showLoad=false&ttl=1378793160704&displayConfId=56";
             document.getElementById('image').src = lien;
         }
         
