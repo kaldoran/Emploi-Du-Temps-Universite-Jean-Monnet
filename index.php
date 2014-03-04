@@ -42,11 +42,12 @@
             margin-right: 10px;
         }
         
-        .error {
+        #error {
             margin-top: 10px;
             text-align: center;
             color: red;
             font-weight: bold;
+            display: none;
         }
         
         img.pacman {
@@ -68,6 +69,7 @@
     <title>Emploi du temps Université Jean-Monnet (Saint-Etienne)</title>
 </head>
 <body>
+    <p id="error">Erreur dans la récupération de la clé.</p>
 
     <!-- Menu de navigation -->
     <nav>
@@ -236,10 +238,15 @@
            /<p>(.*?)<\/p>/.exec(data);
            code = RegExp.$1;
            
-           var img = document.getElementById('image');
-           img.className = img.className.replace("pacman", "");
-           
-           goto(0);
+           if(!code) { 
+               document.getElementById('error').style.display = "block"; 
+               document.getElementById('image').src = "";
+           }
+           else {
+              var img = document.getElementById('image');
+              img.className = img.className.replace("pacman", "");
+              goto(0);
+           }   
         }
         
         var code_promo = document.getElementById('code_promo');
