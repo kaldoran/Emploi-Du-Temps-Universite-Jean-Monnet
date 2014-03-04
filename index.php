@@ -2,8 +2,7 @@
     define("WEEK_START_NB", 33);
     define("NUMBER_WEEK_IN_YEAR", 52); 
 ?>
-
-<!DOCTYPE>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -36,6 +35,18 @@
             margin-left: 20px;
             margin-right: 10px;
         }
+        
+        .error {
+            margin-top: 10px;
+            text-align: center;
+            color: red;
+            font-weight: bold;
+        }
+        
+        img.pacman {
+            margin-top: 100px;
+            margin-bottom: 100px;
+        }
     </style>
     
     <title>Emploi du temps Université Jean-Monnet (Saint-Etienne)</title>
@@ -44,13 +55,13 @@
 
 <?php
     // Récupération du code du lien sans quoi on ne pourrait pas voir l'image de l'edt
-    exec("./code_edt.pl", $output);
-    $contenu = $output[0];
+    //exec("./code_edt.pl", $output);
+    //$contenu = $output[0];
     
-    if(!$contenu)
-        echo "<p style='margin-top: 10px; text-align: center; color: red; font-weight: bold'>Problème avec la récupération de la clé</p>";
+    //if(!$contenu)
+    //    echo "<p cpass='error'>Problème avec la récupération de la clé</p>";
     
-    $code = $contenu;
+    //$code = $contenu;
 ?>
     
     <label for="code_promo">Promo :</label>
@@ -90,7 +101,7 @@
         echo "<option value='$i'";
     
         if(($day == -1 && $i == 0) || $i == $day) /* Si on est dimanche on le met a lundi, sinon on sélectionne le jour actuel */
-            echo 'selected="selected"'; 
+            echo ' selected="selected"'; 
             
         echo ">";
         
@@ -139,7 +150,7 @@
                 
             if($num_semaine + ( NUMBER_WEEK_IN_YEAR - WEEK_START_NB) == $i) {
                 $sv_num_semaine = $i;
-                echo "<option value='$i' selected>";
+                echo "<option value='$i' selected='selected'>";
             }
             else {
                 echo "<option value='$i'>";
@@ -157,47 +168,82 @@
     
     <br /><br />
     
-    <img alt="Emploi du temps" id="image" src="http://planning.univ-st-etienne.fr/ade/imageEt?identifier=<?php echo $code;?>&projectId=7&idPianoWeek=<?php echo $sv_num_semaine; ?>&idPianoDay=<?php if ($day == -1) echo 0; else echo $day;?>&idTree=3083&width=1300&height=500&lunchName=REPAS&displayMode=1057855&showLoad=false&ttl=1378793160704&displayConfId=56">
+    <img alt="Emploi du temps" id="image" class="pacman" src="img/pacman.gif">
     
     <p>Code grandement inspiré de <a href="https://github.com/kaldoran/web/blob/master/ujm_emploi_du_temps.php" title="merci">Nicolas Reynaud</a></p>
 
     
     <script>
-        function goto(val) {
-            var semaine = document.getElementById('semaine').options[document.getElementById('semaine').selectedIndex].value;
-            var code_promo = document.getElementById('code_promo').options[document.getElementById('val').selectedIndex].value;
+        var code;
+        
+        function request(callback) {
+            var xhr = new XMLHttpRequest();
             
-            s += val;
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+                    callback(xhr.responseText);
+                }
+            };
+            
+            xhr.open("GET", "code_edt.cgi", true);
+            xhr.send(null);
+        }
+        
+        function readData(data) {
+           /<p>(.*?)<\/p>/.exec(data);
+           code = RegExp.$1;
+           
+           var img = document.getElementById('image');
+           img.className = img.className.replace("pacman", "");
+           
+           goto(0);
+        }
+        
+        request(readData);
+        
+        function goto(val) {
+            var semaine_obj = document.getElementById('semaine');
+            var code_promo_obj = document.getElementById('code_promo');
+            var jour_obj = document.getElementById('jour');
+ 
+            var code_promo = code_promo_obj.options[code_promo_obj.selectedIndex].value;
+            var semaine = semaine_obj.options[semaine_obj.selectedIndex].value;
+            
+            semaine = parseInt(semaine) + parseInt(val);
     
-            document.getElementById('semaine').options[s].selected = true;
-            jours = document.getElementById('jour');
+            semaine_obj.options[semaine].selected = true;
+            
             var tab_jours = new Array;
-            var j=0;
+            var jours_options = jour_obj.options;
             
             // Récupération de tous les jours sélectionnés
-            for ( var i=0; i< jours.options.length; i++) {
-                if ( jours.options[i].selected == true ) {
-                    tab_jours.push(jours.options[i].value);
-                }
+            for ( var i=0; i< jours_options.length; i++) {
+                if ( jours_options[i].selected == true ) 
+                    tab_jours.push(jours_options[i].value);
             }
-        
-            document.getElementById('image').src = "http://planning.univ-st-etienne.fr/ade/imageEt?identifier=<?php echo $code;?>&projectId=7&idPianoWeek="+semaine+"&idPianoDay="+tab_jours+"&idTree="+code_promo+"&width=1300&height=500&lunchName=REPAS&displayMode=1057855&showLoad=false&ttl=1378793160704&displayConfId=56";
+            
+            var lien = "http://planning.univ-st-etienne.fr/ade/imageEt?identifier="+code+"&projectId=7&idPianoWeek="+semaine+"&idPianoDay="+tab_jours+"&idTree="+code_promo+"&width=1300&height=500&lunchName=REPAS&displayMode=1057855&showLoad=false&ttl=1378793160704&displayConfId=56";
+            document.getElementById('image').src = lien;
         }
         
         var code_promo = document.getElementById('code_promo');
-        code_promo.addEventListener("change", goto(0), false);
+        code_promo.addEventListener("change", function() { goto(0) }, false);
         
         var jour = document.getElementById('jour');
-        jour.addEventListener("change", goto(0), false);
+        jour.addEventListener("change", function() { goto(0) }, false);
         
         var semaine = document.getElementById('semaine');
-        semaine.addEventListener("change", goto(0), false);
+        semaine.addEventListener("change", function() { goto(0) }, false);
         
         var semaine_precedente = document.getElementById('semaine_precedente');
-        semaine_precedente.addEventListener("click", goto(-1), false);
+        semaine_precedente.addEventListener("click", function() { goto(-1) }, false);
 
         var semaine_suivante = document.getElementById('semaine_suivante');
-        semaine_suivante.addEventListener("click", goto(1), false);
+        semaine_suivante.addEventListener("click", function() { goto(1) }, false);
+        
+        
+        
+
         
     </script>
     
