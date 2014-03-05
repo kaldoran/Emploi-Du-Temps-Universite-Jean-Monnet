@@ -1,5 +1,4 @@
-Emploi du temps - Université Jean monnet
+EDT Jean-Monnet (Saint-Etienne) Web
 ===
 
-Permet de récuperer l'emploi du temps présent sur l'ent Jean Monnet
-Et de l'afficher sur une page web distante.
+Voir son emploi du temps rapidement sur le Web, sans passer par les différentes connexions à l'ENT.
