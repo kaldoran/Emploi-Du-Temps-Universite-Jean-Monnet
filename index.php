@@ -184,8 +184,8 @@
     <footer>
         <p>
             <a href="https://github.com/Chocobozzz/Emploi-du-Temps-Jean-Monnet-Web" title="Voir le dépot GitHub">Code</a>
-            grandement inspiré de
-            <a href="https://github.com/kaldoran/web/blob/master/ujm_emploi_du_temps.php" title="merci">Nicolas Reynaud</a>
+            crée par <a href="https://github.com/kaldoran/web/blob/master/ujm_emploi_du_temps.php">Nicolas Reynaud</a>
+            Amélioration apportée par <a href="https://github.com/Chocobozzz" title="merci">Florian Bigard</a>
         </p>
         <p>
             Voir aussi <a href="https://github.com/Chocobozzz/edt_jean-monnet" title="Voir le dépot GitHub">l'application Android</a>
