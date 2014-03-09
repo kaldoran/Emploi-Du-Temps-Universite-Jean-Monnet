@@ -286,7 +286,7 @@
         var code_promo = document.getElementById('code_promo');
         code_promo.addEventListener("change", function() {
             // On sauvegarde la promo de l'utilisateur
-            creerCookie("codepromo", this.selectedIndex);
+            creerCookie("codepromo", this.selectedIndex, 365);
             
             goto(0);
         }, false);
@@ -310,7 +310,9 @@
         // On exécute la requête AJAX pour récupérer le code du lien de l'image de l'emploi du temps
         request(readData);
         
-        code_promo.selectedIndex = lireCookie("codepromo");
+        var cookie_code_promo = lireCookie("codepromo");
+        if(cookie_code_promo != null)
+            code_promo.selectedIndex = cookie_code_promo;
                 
     </script>
     
