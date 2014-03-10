@@ -196,6 +196,36 @@
     <script type="text/javascript">
         var code;
         
+        // Créer un cookie nom=valeur pour un certain nombre de jours
+        function creerCookie(nom, valeur, jours) {
+            var date = new Date();
+            date.setTime(date.getTime() + (jours * 24 * 60 * 60 * 1000));
+            
+            var expire = "; expires=" + date.toGMTString();
+            
+            document.cookie = nom + "=" + valeur + expire + "; path=/";
+        }
+        
+        // Lire la valeur d'un cookie
+        function lireCookie(param_nom) {
+            var nom = param_nom + "=";
+            var cookie = document.cookie.split(';');
+            
+            for(var i=0; i < cookie.length; i++) {
+                var c = cookie[i];
+                
+                // Suppression des espaces blancs
+                while (c.charAt(0) == ' ')
+                    c = c.substring(1, c.length);
+                    
+                if (c.indexOf(nom) == 0)
+                    return c.substring(nom.length, c.length);
+            }
+            
+            return null;
+        }
+        
+        // Charger l'image de l'emploi du temps. val sert à incrémenter/décrémenter le numéro de la semaine
         function goto(val) {
             var semaine_obj = document.getElementById('semaine');
             var code_promo_obj = document.getElementById('code_promo');
@@ -221,6 +251,7 @@
             document.getElementById('image').src = lien;
         }
         
+        // Fonction AJAX pour récupérer le code du lien de l'iamge de l'emploi du temps
         function request(callback) {
             var xhr = new XMLHttpRequest();
             
@@ -234,10 +265,12 @@
             xhr.send(null);
         }
         
+        // Lit la valeur de retour de la page de l'emploi du temps (le code étant contenu dans des balises paragraphes)
         function readData(data) {
            /<p>(.*?)<\/p>/.exec(data);
            code = RegExp.$1;
            
+           // Si pas de code, erreur
            if(!code) { 
                document.getElementById('error').style.display = "block"; 
                document.getElementById('image').src = "";
@@ -249,22 +282,37 @@
            }   
         }
         
+        // Choix de la promo
         var code_promo = document.getElementById('code_promo');
-        code_promo.addEventListener("change", function() { goto(0) }, false);
+        code_promo.addEventListener("change", function() {
+            // On sauvegarde la promo de l'utilisateur
+            creerCookie("codepromo", this.selectedIndex, 365);
+            
+            goto(0);
+        }, false);
         
+        // Choix du/des jour(s)
         var jour = document.getElementById('jour');
         jour.addEventListener("change", function() { goto(0) }, false);
         
+        // Choix de la semaine
         var semaine = document.getElementById('semaine');
         semaine.addEventListener("change", function() { goto(0) }, false);
         
+        // Aller à la semaine précédente
         var semaine_precedente = document.getElementById('semaine_precedente');
         semaine_precedente.addEventListener("click", function() { goto(-1) }, false);
 
+        // Aller à la semaine suivante
         var semaine_suivante = document.getElementById('semaine_suivante');
         semaine_suivante.addEventListener("click", function() { goto(1) }, false);
         
+        // On exécute la requête AJAX pour récupérer le code du lien de l'image de l'emploi du temps
         request(readData);
+        
+        var cookie_code_promo = lireCookie("codepromo");
+        if(cookie_code_promo != null)
+            code_promo.selectedIndex = cookie_code_promo;
                 
     </script>
     
